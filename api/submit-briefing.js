@@ -29,11 +29,10 @@ export default async function handler(req, res) {
     const data = req.body;
     const answers = data.answers || {};
 
-    // Montando os blocos de conteúdo detalhados para o Notion
     const childrenBlocks = [
       {
         object: 'block',
-        heading_2: { rich_text: [{ text: { content: '📁 Informações de Contato e Marca' } }] }
+        heading_2: { rich_text: [{ text: { content: '📁 Dados de Contato e Marca' } }] }
       },
       {
         object: 'block',
@@ -41,32 +40,30 @@ export default async function handler(req, res) {
       },
       {
         object: 'block',
-        paragraph: { rich_text: [{ text: { content: `Status da Marca: ${data.brandStatus || 'Não informado'}` } }] }
+        paragraph: { rich_text: [{ text: { content: `Marca / Empresa: ${data.brandName} | Estado da marca: ${data.brandStatus}` } }] }
       },
       {
         object: 'block',
-        heading_2: { rich_text: [{ text: { content: '✨ Serviços e Respostas Específicas' } }] }
+        heading_2: { rich_text: [{ text: { content: '✨ Respostas dos Serviços Selecionados' } }] }
       }
     ];
 
-    // Adiciona dinamicamente as respostas de cada serviço selecionado aos blocos
     for (const [serviceName, questionsObj] of Object.entries(answers)) {
       childrenBlocks.push({
         object: 'block',
-        heading_3: { rich_text: [{ text: { content: `📌 Serviço: ${serviceName}` } }] }
+        heading_3: { rich_text: [{ text: { content: `📌 ${serviceName}` } }] }
       });
 
       for (const [question, answer] of Object.entries(questionsObj)) {
         if (answer) {
           childrenBlocks.push({
             object: 'block',
-            paragraph: { rich_text: [{ text: { content: `• Q: ${question}\nR: ${answer}` } }] }
+            paragraph: { rich_text: [{ text: { content: `• ${question}\n  R: ${answer}` } }] }
           });
         }
       }
     }
 
-    // Informações Comerciais
     childrenBlocks.push(
       {
         object: 'block',
@@ -74,7 +71,7 @@ export default async function handler(req, res) {
       },
       {
         object: 'block',
-        paragraph: { rich_text: [{ text: { content: `Prazo desejado: ${data.deadline || 'Não informado'}\nFaixa de investimento: ${data.budget || 'Não informado'}\nOrigem do contato: ${data.source || 'Não informado'}` } }] }
+        paragraph: { rich_text: [{ text: { content: `Prazo desejado: ${data.deadline || 'Não informado'}\nFaixa de investimento: ${data.budget}\nOrigem do contato: ${data.source}` } }] }
       }
     );
 
@@ -103,7 +100,7 @@ export default async function handler(req, res) {
           select: { name: data.budget || 'Até R$ 500' }
         },
         "Origem do contato": {
-          select: { name: data.source || 'Outro' }
+          select: { name: data.source.split(' ')[0] || 'Outro' }
         }
       },
       children: childrenBlocks
