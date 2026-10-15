@@ -37,9 +37,6 @@ export default async function handler(req, res) {
         "Nome do cliente": {
           rich_text: [{ text: { content: data.clientName || 'Não informado' } }]
         },
-        "E-mail": {
-          rich_text: [{ text: { content: data.clientEmail || 'nao-informado@email.com' } }]
-        },
         "WhatsApp": {
           phone_number: data.clientPhone || ''
         },
@@ -69,7 +66,7 @@ export default async function handler(req, res) {
         {
           object: 'block',
           paragraph: {
-            rich_text: [{ text: { content: `Cliente: ${data.clientName} | E-mail: ${data.clientEmail} | WhatsApp: ${data.clientPhone || 'Não informado'}` } }]
+            rich_text: [{ text: { content: `Cliente: ${data.clientName} | E-mail: ${data.clientEmail || 'Não informado'} | WhatsApp: ${data.clientPhone || 'Não informado'}` } }]
           }
         },
         {
